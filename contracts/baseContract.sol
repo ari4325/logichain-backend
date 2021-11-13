@@ -18,26 +18,26 @@ contract baseContract {
   }
 
   mapping (address => logiStruct) logisticsProviders;
-  address[] public addressLogistics;
+  address payable [] public addressLogistics;
   
   //adding a logistics provider to the contract
-  function addLogisticsProvider(address _address, string memory name, string memory location, uint payment_amt) public {
+  function addLogisticsProvider(address payable _address, string memory name, string memory location, uint payment_amt) public {
       logiStruct storage logi = logisticsProviders[_address];
       
       logi.name = name;
       logi.location = location;
       logi.payment_amt = payment_amt;
       
-      addressLogistics.push(_address) -1;
+      addressLogistics.push(_address);
   }
   
   //getting addresses of the logistics providers included in our contract.
-  function getLogisticsAddresses() external view returns(address[]) {
+  function getLogisticsAddresses() external view returns(address payable [] memory) {
       return addressLogistics;
   }
   
   //fetching name and location of logistics Provider who were registered on the contract
-  function getDataLogistics(address _address) external view returns(string, string){
+  function getDataLogistics(address _address) external view returns(string memory, string memory){
       return (logisticsProviders[_address].name, logisticsProviders[_address].location);
   }
   
@@ -60,13 +60,13 @@ contract baseContract {
   
   
   //handling payments below
-  function payEther(address _address, uint amt) external{
+  function payEther(address payable _address, uint amt) external{
       _address.transfer(amt);
   }
   function releasePayment() external{
       if(this.hasSufficientFunds()){
           for(uint i = 0; i<addressLogistics.length; i++){
-              address a = addressLogistics[i];
+              address payable a = addressLogistics[i];
               a.transfer(logisticsProviders[a].payment_amt);
           }
       }
@@ -74,7 +74,7 @@ contract baseContract {
   
   updateStruct[] updates;
   function setUpdate(address _address, string memory name, string memory category, string memory _update) external {
-      updateStruct memory update = updateStruct(_address, name, category, now, _update);
+      updateStruct memory update = updateStruct(_address, name, category, block.timestamp, _update);
       updates.push(update);
   }
 }
