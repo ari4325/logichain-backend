@@ -1,21 +1,35 @@
 pragma solidity ^0.8.9;
 contract baseContract {
+    struct userStruct{
+        string name;
+        string mobile_no;
+        address payable account;
+        uint id;
+        uint256 payment_amt;
+    }
+
+    mapping (address => userStruct) users;
+    address payable [] public addressUsers;
+
+    constructor(string name, string mobile_no, address payable _address) public {
+        userStruct storage user = users[_address];
+
+        user.name = name;
+        user.mobile_no = mobile_no;
+        user.id = 1;
+        user.payment_amt = 0;
+        user.account = _address;
+
+        addressUsers.push(_address);
+    }
 
   struct updateStruct{
     address _address;
-    string name;
-    string category;
     uint256 timestamp;
     string update;
   }
 
-
-  // structuring the data for logistics provider
-  struct logiStruct{
-    string name;
-    string location;
-    uint payment_amt;
-  }
+  function addUser(address payable _address, string memory name, string memory mobile_no, uint256 )
 
   mapping (address => logiStruct) logisticsProviders;
   address payable [] public addressLogistics;
@@ -73,8 +87,8 @@ contract baseContract {
   }
   
   updateStruct[] updates;
-  function setUpdate(address _address, string memory name, string memory category, string memory _update) external {
-      updateStruct memory update = updateStruct(_address, name, category, block.timestamp, _update);
+  function setUpdate(address _address, string memory _update) external {
+      updateStruct memory update = updateStruct(_address, block.timestamp, _update);
       updates.push(update);
   }
 }

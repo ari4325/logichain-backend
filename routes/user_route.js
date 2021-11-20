@@ -32,14 +32,20 @@ const signIn = async(req, res) => {
         }).then(function(receipt){
             return res.status(200).json({
                 err: false,
-                msg: receipt
+                msg: "User created successfully",
+                receipt: receipt
             })
         });
     }else{
         return res.status(200).json({
             err: false,
             msg: "User already exists",
-            value: val
+            value: {
+                name: val[1],
+                mobile_no: val[2],
+                account_address: val[3],
+                contracts: val[4]
+            }
         })
     }
 }
